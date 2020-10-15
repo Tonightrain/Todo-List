@@ -14,7 +14,6 @@
         </Todolist>
       </ul>
     </div>
-
   </div>
 </template>
 
@@ -32,8 +31,10 @@ export default class App extends Vue {
   list: string[] =  []
 
   handleSubmit(): void {
-    this.list.push(this.inputValue);
-    this.inputValue = ''
+    if (this.inputValue != ''){
+      this.list.push(this.inputValue)
+      this.inputValue = ''
+    }
   }
 
   handleDelete(index: number): void {
@@ -54,26 +55,21 @@ export default class App extends Vue {
 }
 
 .title{
-  font-size: 90px;
+  font-size: 100px;
   font-weight: 100;
   text-align: center;
   color: rgba(175, 47, 47, 0.15);
 }
 
-.todo-list{
-  margin-top:-20px;
-}
-
 .todo{
   outline: none;
   display: block;
-  box-shadow: inset 0 -1px 0px #cccbcb;
-  padding: 10px 10px 10px 10px;
+  box-shadow: inset 0 -1px 0px #c1bfbf;
+  padding: 10px 10px 10px 50px;
   border: none;
   width: 600px;
   height: 50px;
   margin-top:-50px;
-  background-color: white;
 }
 
 input::-webkit-input-placeholder{
@@ -87,4 +83,10 @@ input::-webkit-input-placeholder{
   font-style: italic;
 }
 
+.lists{
+  list-style: none;
+  padding-left: 0px;
+  margin: 0px;
+  background: white;
+}
 </style>
