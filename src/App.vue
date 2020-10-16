@@ -15,12 +15,14 @@
         </Todolist>
       </ul>
     </div>
+    <Footer :count="countsOfActive"></Footer>
   </div>
 </template>
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
 import Todolist from "@/components/Todolist.vue";
+import Footer from "@/components/Footer.vue";
 
 interface todoListObj {
   All: string[],
@@ -31,6 +33,7 @@ interface todoListObj {
 @Component({
   components: {
     Todolist,
+    Footer,
   }
 })
 
@@ -44,7 +47,6 @@ export default class App extends Vue {
     Completed: []
   }
 
-
   handleSubmit(): void {
     if (this.inputValue != '') {
       this.list.All.push(this.inputValue)
@@ -57,8 +59,23 @@ export default class App extends Vue {
     }
   }
 
+  isHasThing(thing: string, arr: string[]): number {
+    return arr.findIndex((item) => item === thing);
+  }
+
   handleDelete(index: number): void {
+    const thing = this.list.All[index]
     this.list.All.splice(index, 1)
+
+    let indexOfActive: number = this.isHasThing(thing, this.list.Active)
+    indexOfActive != 0 ? this.list.Active.splice(indexOfActive, 1) : ''
+
+    let indexOfCompleted: number = this.isHasThing(thing, this.list.Completed)
+    indexOfCompleted != 0 ? this.list.Completed.splice(indexOfCompleted, 1) : ''
+
+    console.log(this.list.All)
+    console.log(this.list.Active)
+    console.log(this.list.Completed)
   }
 
   handleStateChange(index: number, checked: boolean): void {
@@ -84,6 +101,8 @@ export default class App extends Vue {
     console.log(this.list.Active)
     console.log(this.list.Completed)
   }
+
+  countsOfActive: number = this.list.Active.length
 
 }
 </script>

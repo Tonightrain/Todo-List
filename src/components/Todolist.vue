@@ -16,7 +16,7 @@ import {Component, Vue, Prop} from 'vue-property-decorator';
 
 @Component({})
 export default class Todolist extends Vue {
-  @Prop() private index: undefined;
+  @Prop() private index: any;
   @Prop() private content!: string;
 
   checked: boolean = false
