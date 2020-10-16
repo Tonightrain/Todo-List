@@ -5,11 +5,12 @@
       <input class="todo" v-model="inputValue" placeholder="What needs to be done?" @keyup.enter="handleSubmit">
       <ul class="lists">
         <Todolist
-            v-for="(item,index) of list"
-            :key="index"
+            v-for="(item,index) of list.All"
+            :key="`${item}-${index}`"
             :content="item"
             :index="index"
             @delete="handleDelete"
+            @change="handleStateChange"
         >
         </Todolist>
       </ul>
@@ -21,31 +22,74 @@
 import {Component, Vue} from 'vue-property-decorator';
 import Todolist from "@/components/Todolist.vue";
 
+interface todoListObj {
+  All: string[],
+  Active: string[],
+  Completed: string[]
+}
+
 @Component({
   components: {
     Todolist,
   }
 })
+
 export default class App extends Vue {
-  inputValue: string =  ''
-  list: string[] =  []
+
+  inputValue: string = ''
+
+  list: todoListObj = {
+    All: [],
+    Active: [],
+    Completed: []
+  }
+
 
   handleSubmit(): void {
-    if (this.inputValue != ''){
-      this.list.push(this.inputValue)
+    if (this.inputValue != '') {
+      this.list.All.push(this.inputValue)
+      this.list.Active.push(this.inputValue)
       this.inputValue = ''
+
+      console.log(this.list.All)
+      console.log(this.list.Active)
+      console.log(this.list.Completed)
     }
   }
 
   handleDelete(index: number): void {
-    this.list.splice(index, 1)
+    this.list.All.splice(index, 1)
+  }
+
+  handleStateChange(index: number, checked: boolean): void {
+    const thing = this.list.All[index]
+
+    if (checked == false) {
+      this.list.Active.forEach((item: string, index) => {
+        if (item == thing) {
+          this.list.Completed.push(this.list.Active[index])
+          this.list.Active.splice(index, 1)
+        }
+      })
+    } else {
+      this.list.Completed.forEach((item: string, index) => {
+        if (item == thing) {
+          this.list.Active.push(this.list.Completed[index])
+          this.list.Completed.splice(index, 1)
+        }
+      })
+    }
+
+    console.log(this.list.All)
+    console.log(this.list.Active)
+    console.log(this.list.Completed)
   }
 
 }
 </script>
 
 <style scoped>
-#app{
+#app {
   background: #f5f5f5;
   height: 100vh;
   width: 100vw;
@@ -54,14 +98,14 @@ export default class App extends Vue {
   align-items: center;
 }
 
-.title{
+.title {
   font-size: 100px;
   font-weight: 100;
   text-align: center;
   color: rgba(175, 47, 47, 0.15);
 }
 
-.todo{
+.todo {
   outline: none;
   display: block;
   box-shadow: inset 0 -1px 0px #c1bfbf;
@@ -69,10 +113,10 @@ export default class App extends Vue {
   border: none;
   width: 600px;
   height: 50px;
-  margin-top:-50px;
+  margin-top: -50px;
 }
 
-input::-webkit-input-placeholder{
+input::-webkit-input-placeholder {
   color: #e8e7e7;
 }
 
@@ -83,7 +127,7 @@ input::-webkit-input-placeholder{
   font-style: italic;
 }
 
-.lists{
+.lists {
   list-style: none;
   padding-left: 0px;
   margin: 0px;
