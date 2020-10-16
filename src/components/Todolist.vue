@@ -16,10 +16,10 @@ import {Component, Vue, Prop} from 'vue-property-decorator';
 
 @Component({})
 export default class Todolist extends Vue {
-  @Prop() private index: any;
-  @Prop() private content!: string;
+  @Prop() private index: number | undefined;
+  @Prop() private content: string | undefined;
+  @Prop() private checked: boolean | undefined
 
-  checked: boolean = false
 
   handleClick() {
     this.$emit('delete', this.index)

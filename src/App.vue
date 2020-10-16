@@ -5,9 +5,10 @@
       <input class="todo" v-model="inputValue" placeholder="What needs to be done?" @keyup.enter="handleSubmit">
       <ul class="lists">
         <Todolist
-            v-for="(item,index) of list.All"
+            v-for="(item,index) of list"
             :key="`${item}-${index}`"
-            :content="item"
+            :content="item.content"
+            :checked="item.checked"
             :index="index"
             @delete="handleDelete"
             @change="handleStateChange"
@@ -15,7 +16,7 @@
         </Todolist>
       </ul>
     </div>
-    <Footer :count="countsOfActive"></Footer>
+<!--    <Footer :count="countsOfActive"></Footer>-->
   </div>
 </template>
 
@@ -25,9 +26,8 @@ import Todolist from "@/components/Todolist.vue";
 import Footer from "@/components/Footer.vue";
 
 interface todoListObj {
-  All: string[],
-  Active: string[],
-  Completed: string[]
+  content: string,
+  checked: boolean
 }
 
 @Component({
@@ -41,68 +41,29 @@ export default class App extends Vue {
 
   inputValue: string = ''
 
-  list: todoListObj = {
-    All: [],
-    Active: [],
-    Completed: []
-  }
+  list:todoListObj[] = []
 
   handleSubmit(): void {
     if (this.inputValue != '') {
-      this.list.All.push(this.inputValue)
-      this.list.Active.push(this.inputValue)
+      let thing:todoListObj = {
+        content: this.inputValue,
+        checked: false
+      }
+      this.list.push(thing)
       this.inputValue = ''
-
-      console.log(this.list.All)
-      console.log(this.list.Active)
-      console.log(this.list.Completed)
     }
-  }
-
-  isHasThing(thing: string, arr: string[]): number {
-    return arr.findIndex((item) => item === thing);
+    console.log(this.list)
   }
 
   handleDelete(index: number): void {
-    const thing = this.list.All[index]
-    this.list.All.splice(index, 1)
-
-    let indexOfActive: number = this.isHasThing(thing, this.list.Active)
-    indexOfActive != 0 ? this.list.Active.splice(indexOfActive, 1) : ''
-
-    let indexOfCompleted: number = this.isHasThing(thing, this.list.Completed)
-    indexOfCompleted != 0 ? this.list.Completed.splice(indexOfCompleted, 1) : ''
-
-    console.log(this.list.All)
-    console.log(this.list.Active)
-    console.log(this.list.Completed)
+    this.list.splice(index, 1)
+    console.log(this.list)
   }
 
-  handleStateChange(index: number, checked: boolean): void {
-    const thing = this.list.All[index]
-
-    if (checked == false) {
-      this.list.Active.forEach((item: string, index) => {
-        if (item == thing) {
-          this.list.Completed.push(this.list.Active[index])
-          this.list.Active.splice(index, 1)
-        }
-      })
-    } else {
-      this.list.Completed.forEach((item: string, index) => {
-        if (item == thing) {
-          this.list.Active.push(this.list.Completed[index])
-          this.list.Completed.splice(index, 1)
-        }
-      })
-    }
-
-    console.log(this.list.All)
-    console.log(this.list.Active)
-    console.log(this.list.Completed)
+  handleStateChange(index: number): void {
+    this.list[index].checked = !this.list[index].checked
+    console.log(this.list)
   }
-
-  countsOfActive: number = this.list.Active.length
 
 }
 </script>
