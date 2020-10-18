@@ -2,7 +2,19 @@
   <div id="app">
     <h1 class="title">todos</h1>
     <div class="todo-list">
-      <input class="todo" v-model="inputValue" placeholder="What needs to be done?" @keyup.enter="handleSubmit">
+      <a-icon
+          :class="this.list.length == 0 ? 'hide' :
+          this.list.find((item) => item.checked == false) == undefined ?
+          'changeAll2':'changeAll'"
+          type="down"
+          @click="handleChangeAll"
+      />
+      <input
+          class="todo"
+          v-model="inputValue"
+          placeholder="What needs to be done?"
+          @keyup.enter="handleSubmit"
+      >
       <ul class="lists">
         <Todolist
             v-for="(item,index) of list"
@@ -12,11 +24,15 @@
             :index="index"
             @delete="handleDelete"
             @change="handleStateChange"
-        >
-        </Todolist>
+        ></Todolist>
       </ul>
     </div>
-<!--    <Footer :count="countsOfActive"></Footer>-->
+    <Footer
+        :list="list"
+        :change="handleStateChange"
+        @clear="handleClear"
+        :class="this.list.length == 0 && 'hide'"
+    ></Footer>
   </div>
 </template>
 
@@ -43,6 +59,12 @@ export default class App extends Vue {
 
   list:todoListObj[] = []
 
+  // currentRoute: window.location.pathname
+
+  // activeList:todoListObj[] | undefined= this.list?.filter((item) => {
+  //   return item.checked === false
+  // })
+
   handleSubmit(): void {
     if (this.inputValue != '') {
       let thing:todoListObj = {
@@ -64,6 +86,27 @@ export default class App extends Vue {
     this.list[index].checked = !this.list[index].checked
     console.log(this.list)
   }
+
+  handleClear():void {
+    this.list = this.list.filter((item) => item.checked ==false)
+}
+
+  handleChangeAll():void {
+    this.list.find((item) => item.checked == false) != undefined ?
+        this.list.map((item) => item.checked = true) :
+        this.list.map((item) => item.checked =false)
+  }
+
+  // isListNull():boolean {
+  //   return this.list.length == 0
+  // }
+  //
+  // isExistTodo():boolean {
+  //   return this.list.find((item) => item.checked == false) == undefined
+  // }
+
+
+
 
 }
 </script>
@@ -98,13 +141,15 @@ export default class App extends Vue {
 
 input::-webkit-input-placeholder {
   color: #e8e7e7;
+  font-style:italic;
 }
 
 .todo, .edit {
   font-size: 30px;
   font-family: inherit;
   font-weight: lighter;
-  font-style: italic;
+  font-style: normal;
+  color: #4d4d4d;
 }
 
 .lists {
@@ -113,4 +158,22 @@ input::-webkit-input-placeholder {
   margin: 0px;
   background: white;
 }
+
+.hide{
+  display: none;
+}
+
+.changeAll{
+  margin-left: 20px;
+  color:#e6e6e6;
+  outline: none;
+
+}
+
+.changeAll2{
+  margin-left: 20px;
+  color: #545252;
+  outline: none;
+}
+
 </style>

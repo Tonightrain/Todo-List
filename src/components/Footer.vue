@@ -1,22 +1,55 @@
 <template>
   <div class="footer">
-    <span class="count">{{ count }} item left</span>
-    <div class="filter-button">
-      <button class="all">All</button>
+    <span class="count">{{count}} item left</span>
+    <div class="filter">
+      <button>All</button>
       <button>Active</button>
       <button>Completed</button>
     </div>
-    <button class="clear">Clear Completed</button>
+    <button
+        :class="this.list.filter((item) => item.checked===true).length === 0 ? 'hide': 'clear'"
+        @click="handleClear">
+      Clear Completed
+    </button>
   </div>
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop} from 'vue-property-decorator';
+import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
 
-@Component({})
+interface todoListObj {
+  content: string,
+  checked: boolean
+}
+
+@Component({
+})
 
 export default class Footer extends Vue{
-  @Prop() private count!:number
+  @Prop() private list:todoListObj[] | undefined
+  @Prop() private change:any
+
+  count:number | undefined = 0
+
+
+  @Watch('list')
+  getActiveCount():void{
+    this.count = this.list?.filter((item) => {
+      return item.checked === false
+    }).length
+  }
+
+  @Watch('change')
+  getCount():void{
+    this.count = this.list?.filter((item) => {
+      return item.checked === false
+    }).length
+  }
+
+  handleClear() :void{
+    this.$emit('clear')
+  }
+
 }
 
 </script>
@@ -33,29 +66,48 @@ export default class Footer extends Vue{
   0 8px 0 -3px #f6f6f6, 0 9px 1px -3px rgba(0, 0, 0, 0.2),
   0 16px 0 -6px #f6f6f6, 0 17px 2px -6px rgba(0, 0, 0, 0.2);
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
 
 .count{
-margin-left: 20px;
+  margin-left: 20px;
 }
 
 .clear{
-  margin-right: 20px;
+  margin-left: 100px;
+}
+
+.filter{
+  margin-left: 140px;
+}
+
+.filter button{
+  margin-left: 15px;
+  padding: 3px;
+}
+
+.filter button:hover{
+  border: rgba(186, 56, 56, 0.2) solid 1px;
+  border-radius: 3px;
 }
 
 button{
   font-size: 15px;
   color: #797878;
-  background: white;
+  background: #ffffff;
   border: none;
   font-family: inherit;
   font-weight: unset;
+  outline: none;
 }
 
 .clear:hover{
   text-decoration: underline;
+}
+
+.hide{
+  display: none;
 }
 
 </style>
