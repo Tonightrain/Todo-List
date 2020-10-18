@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <span class="count">{{count}} item left</span>
+    <span class="count">{{count()}} item left</span>
     <div class="filter">
       <button>All</button>
       <button>Active</button>
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
+import {Component, Vue, Prop} from 'vue-property-decorator';
 
 interface todoListObj {
   content: string,
@@ -29,21 +29,8 @@ export default class Footer extends Vue{
   @Prop() private list:todoListObj[] | undefined
   @Prop() private change:any
 
-  count:number | undefined = 0
-
-
-  @Watch('list')
-  getActiveCount():void{
-    this.count = this.list?.filter((item) => {
-      return item.checked === false
-    }).length
-  }
-
-  @Watch('change')
-  getCount():void{
-    this.count = this.list?.filter((item) => {
-      return item.checked === false
-    }).length
+  count():number | undefined{
+    return this.list?.filter((item) => item.checked == false).length
   }
 
   handleClear() :void{

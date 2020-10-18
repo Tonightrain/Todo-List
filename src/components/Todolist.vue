@@ -37,10 +37,11 @@ export default class Todolist extends Vue {
   padding: 10px 0px 10px 50px;
   border: 1px solid white;
   border-bottom: 1px solid #e1dfdf;
-  height: 45px;
+  width: 608px;
   font-size: 30px;
   font-weight: lighter;
   color: #4d4d4d;
+  word-break: break-all;
 }
 
 .item .delete-icon {
