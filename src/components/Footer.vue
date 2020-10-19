@@ -2,15 +2,16 @@
   <div class="footer">
     <span class="count">{{count()}} item left</span>
     <div class="filter">
-      <button>All</button>
-      <button>Active</button>
-      <button>Completed</button>
+      <a class="link" href="/All">All</a>
+      <a class="link" href="/Active">Active</a>
+      <a class="link" href="/Completed">Completed</a>
     </div>
     <button
-        :class="this.list.filter((item) => item.checked===true).length === 0 ? 'hide': 'clear'"
+        :class="isHasCompleted() ? 'hide': 'clear'"
         @click="handleClear">
       Clear Completed
     </button>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -30,11 +31,15 @@ export default class Footer extends Vue{
   @Prop() private change:any
 
   count():number | undefined{
-    return this.list?.filter((item) => item.checked == false).length
+    return this.list?.filter((item) => item.checked === false).length
   }
 
   handleClear() :void{
     this.$emit('clear')
+  }
+
+  isHasCompleted():boolean{
+    return this.list?.filter((item) => item.checked === true).length == 0
   }
 
 }
@@ -95,6 +100,26 @@ button{
 
 .hide{
   display: none;
+}
+
+
+
+
+.filter .link{
+  margin-left: 20px;
+  padding: 2px 2px;
+  text-decoration: none;
+  color:#797878 ;
+}
+
+.filter .link:hover{
+  border: rgba(186, 56, 56, 0.2) solid 1px;
+  border-radius: 3px;
+}
+
+.filter .link:active{
+  border: rgba(74, 12, 12, 0.2) solid 1px;
+  border-radius: 3px;
 }
 
 </style>

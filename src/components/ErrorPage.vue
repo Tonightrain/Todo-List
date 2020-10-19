@@ -1,7 +1,5 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+  <h1>404 Not Found</h1>
 </template>
 
 <script lang="ts">
@@ -11,10 +9,10 @@ import {Component, Vue} from 'vue-property-decorator';
   components: {}
 })
 
-export default class App extends Vue {
+export default class ErrorPage extends Vue {
 }
 </script>
 
-<style scoped>
+<style>
 
 </style>
