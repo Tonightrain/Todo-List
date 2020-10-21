@@ -1,8 +1,8 @@
 <template>
   <ul class="lists">
     <li class="item"
-        v-for="(item,index) of listFilter"
-        :key="`${item}-${index}`"
+        v-for="item of listFilter"
+        :key="item.id"
     >
       <span :class="item.checked?'item-content': ''">{{ item.content }}</span>
       <input
