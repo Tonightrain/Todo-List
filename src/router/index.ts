@@ -2,8 +2,10 @@ import App from "@/App.vue";
 import VueRouter from "vue-router";
 import Vue from "vue";
 import Todolist from "@/components/Todolist.vue";
-import Home from "@/components/Home.vue";
-import ErrorPage from "@/components/ErrorPage.vue";
+import Home from "@/view/Home.vue";
+import ErrorPage from "@/view/ErrorPage.vue";
+import home1 from "@/view/home1.vue"
+
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location: import("vue-router").RawLocation) {
@@ -18,7 +20,8 @@ export default new VueRouter({
     routes: [
         {
             path: '/',
-            component:Home,
+            // component:Home,
+            component:home1,
             children: [
                 {
                     path: '/All',

@@ -1,53 +1,71 @@
 <template>
-  <div class="footer">
-    <span class="count">{{count()}} item left</span>
+  <div class="footer" v-if="isListNull()">
+    <span class="count">
+      {{ showTodoNums() }}
+    </span>
     <div class="filter">
-      <a class="link" href="/All">All</a>
-      <a class="link" href="/Active">Active</a>
-      <a class="link" href="/Completed">Completed</a>
+      <router-link class="link" to="/All">All</router-link>
+      <router-link class="link" to="/Active" >Active</router-link>
+      <router-link class="link" to="/Completed">Completed</router-link>
+
+      <!--      <button class="link" @click="listFilter('All')">All</button>-->
+      <!--      <button class="link" @click="listFilter('Active')">Active</button>-->
+      <!--      <button class="link" @click="listFilter('Completed')">Completed</button>-->
     </div>
     <button
-        :class="isHasCompleted() ? 'hide': 'clear'"
+        class="clearCompleted"
+        v-if="isHasCompleted()"
         @click="handleClear">
       Clear Completed
     </button>
-    <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop} from 'vue-property-decorator';
+import {Component, Vue,Watch} from 'vue-property-decorator';
 
-interface todoListObj {
-  content: string,
-  checked: boolean
-}
+@Component({})
 
-@Component({
-})
+export default class Footer extends Vue {
 
-export default class Footer extends Vue{
-  @Prop() private list:todoListObj[] | undefined
-  @Prop() private change:any
-
-  count():number | undefined{
-    return this.list?.filter((item) => item.checked === false).length
+  handleClear(): void {
+    this.$store.commit('clearAllCompleted')
   }
 
-  handleClear() :void{
-    this.$emit('clear')
+  showTodoNums(): string {
+    const num = this.$store.state.todoVMS.filter((item: any) => item.checked === false).length
+    return num <= 1 ? `${num} item left` : `${num} items left`
   }
 
-  isHasCompleted():boolean{
-    return this.list?.filter((item) => item.checked === true).length == 0
+  isHasCompleted(): boolean {
+    return this.$store.state.todoVMS.filter((item: any) => item.checked === true).length !== 0
   }
+
+  isListNull(): boolean {
+    return this.$store.state.todoVMS.length !== 0
+  }
+
+  path = window.location.href
+
+  // listFilter(filter:string) {
+  //   this.$store.commit('listFilter', filter)
+  // }
+  //
+  @Watch('$route')
+  listFilter() {
+    console.log(this.$route)
+    // const filter = this.path.split('/').pop()
+    // this.$store.commit('listFilter',filter)
+    }
+
+
 
 }
 
 </script>
 
 <style scoped>
-.footer{
+.footer {
   height: 50px;
   width: 660px;
   font-size: 15px;
@@ -62,29 +80,31 @@ export default class Footer extends Vue{
   align-items: center;
 }
 
-.count{
+.count {
+  width: 100px;
   margin-left: 20px;
 }
 
-.clear{
-  margin-left: 100px;
+.clearCompleted {
+  margin-left: 80px;
+  width: 180px;
 }
 
-.filter{
-  margin-left: 140px;
+.filter {
+  margin-left: 120px;
 }
 
-.filter button{
+.filter button {
   margin-left: 15px;
   padding: 3px;
 }
 
-.filter button:hover{
+.filter button:hover {
   border: rgba(186, 56, 56, 0.2) solid 1px;
   border-radius: 3px;
 }
 
-button{
+button {
   font-size: 15px;
   color: #797878;
   background: #ffffff;
@@ -94,30 +114,28 @@ button{
   outline: none;
 }
 
-.clear:hover{
+.clearCompleted:hover {
   text-decoration: underline;
 }
 
-.hide{
+.hide {
   display: none;
 }
 
 
-
-
-.filter .link{
+.filter .link {
   margin-left: 20px;
   padding: 2px 2px;
   text-decoration: none;
-  color:#797878 ;
+  color: #797878;
 }
 
-.filter .link:hover{
+.filter .link:hover {
   border: rgba(186, 56, 56, 0.2) solid 1px;
   border-radius: 3px;
 }
 
-.filter .link:active{
+.filter .link:active {
   border: rgba(74, 12, 12, 0.2) solid 1px;
   border-radius: 3px;
 }

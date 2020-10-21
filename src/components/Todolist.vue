@@ -1,35 +1,56 @@
 <template>
-  <li class="item">
-    <span :class="checked?'item-content': ''">{{ content }}</span>
-    <input
-        type="checkbox"
-        class="checkbox"
-        v-model="checked"
-        @click="handleChange"
+  <ul class="lists">
+    <li class="item"
+        v-for="(item,index) of listFilter"
+        :key="`${item}-${index}`"
     >
-    <label class="delete-icon" @click="handleClick">×</label>
-  </li>
+      <span :class="item.checked?'item-content': ''">{{ item.content }}</span>
+      <input
+          type="checkbox"
+          class="checkbox"
+          v-model="item.checked"
+          @click="handleChange($event,item.id)"
+      >
+      <label class="delete-icon" @click="handleDelete($event,item.id)">×</label>
+    </li>
+  </ul>
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop} from 'vue-property-decorator';
+import {Component, Vue} from 'vue-property-decorator';
+import {Filter} from "@/viewModel/Filter";
 
 @Component({})
 export default class Todolist extends Vue {
-  @Prop() private index: number | undefined;
-  @Prop() private content: string | undefined;
-  @Prop() private checked: boolean | undefined
+  //
+  // path = window.location.href
 
-
-  handleClick() {
-    this.$emit('delete', this.index)
+  handleDelete(event: Event, todoId: string) {
+    this.$store.commit('deleteTodo', todoId)
   }
 
-  handleChange() {
-    this.$emit('change', this.index, this.checked)
+  handleChange(event: Event, todoId: string) {
+    this.$store.commit('changeChecked', todoId)
   }
+
+
+  // @Watch('$route.path')
+  get listFilter() {
+    const filter = this.$route.path
+    switch (filter) {
+      case `/${Filter.All}`:
+        return this.$store.state.todoVMS
+      case `/${Filter.Active}`:
+        return this.$store.state.todoVMS.filter((item) => item.checked === false)
+      case `/${Filter.Completed}`:
+        return this.$store.state.todoVMS.filter((item) => item.checked === true)
+      default:
+        return this.$store.state.todoVMS
+    }
+  }
+
+
 }
-
 </script>
 
 <style scoped>
@@ -95,6 +116,14 @@ export default class Todolist extends Vue {
 .item-content {
   text-decoration: line-through;
   color: #d9d9d9;
+}
+
+
+.lists {
+  list-style: none;
+  padding-left: 0px;
+  margin: 0px;
+  background: white;
 }
 
 </style>
