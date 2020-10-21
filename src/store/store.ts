@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex'
-import TodoVM from "@/viewModel/TodoVM";
+import TodoVM from "@/store/TodoVM";
 import LocalStorage from "@/model/LocalStorage";
-import Converter from "@/viewModel/Converter";
-import {Filter} from "@/viewModel/Filter";
+import Converter from "@/store/Converter";
+import {Filter} from "@/store/Filter";
 
 Vue.use(Vuex)
 

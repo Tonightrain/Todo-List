@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import {Filter} from "@/viewModel/Filter";
+import {Filter} from "@/store/Filter";
 
 @Component({})
 export default class Todolist extends Vue {
@@ -33,8 +33,6 @@ export default class Todolist extends Vue {
     this.$store.commit('changeChecked', todoId)
   }
 
-
-  // @Watch('$route.path')
   get listFilter() {
     const filter = this.$route.path
     switch (filter) {
