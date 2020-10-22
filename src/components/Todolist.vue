@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import {Filter} from "@/store/Filter";
+import {Filter} from "../store/Filter";
 
 @Component({})
 export default class Todolist extends Vue {

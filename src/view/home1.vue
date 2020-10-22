@@ -12,9 +12,9 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import Todolist from "@/components/Todolist.vue";
-import Footer from "@/components/Footer.vue";
-import TodoAdd from "@/components/TodoAdd.vue";
+import Todolist from "../components/Todolist.vue";
+import Footer from "../components/Footer.vue";
+import TodoAdd from "../components/TodoAdd.vue"
 
 @Component({
   components: {
