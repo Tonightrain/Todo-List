@@ -1,4 +1,4 @@
-import Todo from "@/model/Todo";
+import Todo from "../model/Todo";
 
 class LocalStorage {
     todos: Todo[];
